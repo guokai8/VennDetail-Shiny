@@ -5,4 +5,4 @@ cd VennDetail-Shiny
 library(shiny)
 runApp()
 ```
-[Try it now!](http://hurlab.med.und.edu/VennDtail)
+[Try it now!](http://hurlab.med.und.edu/VennDetail)
