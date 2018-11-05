@@ -1,5 +1,5 @@
 # VennDetail Shiny App
-git clone https://github.com/guokai8/VennDetail-Shiny
+git clone https://github.com/guokai8/VennDetail-Shiny    
 cd VennDetail-Shiny
 ```
 library(shiny)
