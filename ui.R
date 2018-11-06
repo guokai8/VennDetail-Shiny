@@ -238,7 +238,8 @@ tabPanel("Detail",
                      label = 'File type',
                      choices = c(
                        txt = 'txt',
-                       csv='csv'),inline = TRUE,
+                       csv='csv',
+                       xls='xls'),inline = TRUE,
                      selected = 'txt'
                    )),
                     downloadButton('Download_data', label = "Download Data"),

@@ -5,7 +5,7 @@ library(grid)
 library(tidyverse)
 library(readxl)
 library(export)
-library(officer)
+library(xlsx)
 options(shiny.maxRequestSize=200*1024^2) 
 options(digits=3)
 #setwd("/home/hurlab/tmp")
@@ -442,6 +442,9 @@ output$Download_data<-downloadHandler(
     }
     if(input$fftype=="csv"){
       write.csv(getdata(),file=file,quote=F)
+    }
+    if(input$fftype=="xls"){
+      write.xlsx(getdata(),file=file,sheetName="Sheet 1",append=FALSE)
     }
   }
 )
