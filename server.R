@@ -19,7 +19,8 @@ B=data.frame("Gene"=paste("Gene",sample(LETTERS[1:26],20,replace=F),sep="."),"Ex
 rownames(A)<-A$Gene
 rownames(B)<-B$Gene
 #mycol<-unique(c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3",setcolor(30)))
-mycol<-c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3")
+#mycol<-c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3")
+mycol<-c("dodgerblue", "goldenrod1", "darkorange1", "seagreen3", "orchid3","darkslategray3","cyan1", "deepskyblue", "palegreen", "thistle", "wheat")
 mycol2<-unique(c("transparent","black",mycol,setcolor(40)))
 checkfile <- function(file){ 
   ex <- strsplit(basename(file), split="\\.")[[1]]
@@ -255,7 +256,13 @@ setven<-reactive({
   dd<-data()
   dd<-dd[input$sel]
   dd<-lapply(dd,function(x)na.omit(x))
-  ven<<-venndetail(dd,plot=F)
+  nn<-names(dd)
+  if(sum(grepl("_",nn))>0){
+      sep=" "
+    }else{
+      sep="_"
+    }
+  ven<<-venndetail(dd,plot=F,sep=sep)
 })
 plot_fig<-function(){
   res<-setven()
@@ -279,7 +286,7 @@ plot_fig<-function(){
     }else{
       logg=FALSE
     }
-    plot(res,type=input$type,piecolor=col1,any=input$any,revcolor=input$revcol,percentage=percent,log = logg,base=2,sep=":")
+    plot(res,type=input$type,piecolor=col1,any=input$any,revcolor=input$revcol,percentage=percent,log = logg,base=2,sep=res@sep)
   }
   if(input$type=="upset"){
     plot(res,type=input$type,mycol=input$col[1:length(res@input)],
@@ -366,7 +373,7 @@ output$dyna<-renderUI({
               sliderInput("alpha","Alpha",min=0,max=1,value=0.5,step=0.1),
               selectInput("border","Border",choices=mycol2,selected="black")
              ),
-  "vennpie"=list(selectInput("piecol","Color",choices = c(rev(mycol),colors()),selected = rev(mycol)[1:length(detail(setven()))],multiple = T),
+  "vennpie"=list(selectInput("piecol","Color",choices = c(rev(mycol),colors()),selected = c(rev(mycol),sample(colors(),657))[1:length(detail(setven()))],multiple = T),
                  selectInput("any","Selected",choices = 1:(length(setven()@raw)),multiple = T,selected =1:(length(setven()@raw))),
                  selectInput("revcol","Reverse color",choices = c(mycol,colors()),selected="lightgrey"),
                  radioButtons("percent","Percentage",choices = c("Yes","No"),selected = "No",inline = TRUE),
