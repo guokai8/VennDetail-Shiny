@@ -1,4 +1,5 @@
 library(VennDetail)
+library(RSelenium)
 library(DT)
 library(ggplot2)
 library(grid)
@@ -6,9 +7,11 @@ library(tidyverse)
 library(readxl)
 library(export)
 library(xlsx)
+library(officer)
+library(rvg)
 options(shiny.maxRequestSize=200*1024^2) 
 options(digits=3)
-#setwd("/home/hurlab/tmp")
+setwd("/home/hurlab/tmp")
 A1 <- sample(1:100, 15, replace = FALSE);
 B1 <- sample(1:100, 20, replace = FALSE);
 A=data.frame("Gene"=paste("Gene",sample(LETTERS[1:26],15,replace=F),sep="."),"Exp"=A1,"FC"=round(rnorm(15),2))
@@ -276,7 +279,7 @@ plot_fig<-function(){
     }else{
       logg=FALSE
     }
-    plot(res,type=input$type,piecolor=col1,any=input$any,revcolor=input$revcol,percentage=percent,log = logg,base=2)
+    plot(res,type=input$type,piecolor=col1,any=input$any,revcolor=input$revcol,percentage=percent,log = logg,base=2,sep="xx_xx_xx_xx")
   }
   if(input$type=="upset"){
     plot(res,type=input$type,mycol=input$col[1:length(res@input)],
@@ -307,29 +310,52 @@ output$Download_plot<-downloadHandler(
     if(input$ftype=="pdf"){
       pdf(filename,width = wid,height = hei)
       plot_fig()
+      dev.off()
     }
     if(input$ftype=="png"){
       png(filename,width = wid*50,height = hei*50,res=300,units = "px")
       plot_fig()
+      dev.off()
     }
     if(input$ftype=="jpeg"){
       jpeg(filename,width = wid*50,height = hei*50,res=300,units = "px")
       plot_fig()
+      dev.off()
     }
     if(input$ftype=="tiff"){
       tiff(filename,width = wid*50,height = hei*50,units = "px")
       plot_fig()
+      dev.off()
     }
     if(input$ftype=="eps"){
       graph2eps(plot_fig(),file=filename)
     }
     if(input$ftype=="pptx"){
-      graph2ppt(plot_fig(),file=filename)
+      doc <- read_pptx()
+      doc <- add_slide(doc, "Title and Content", "Office Theme")
+      if(input$type=="upset"){
+          doc<-ph_with_vg(doc,print(plot_fig()))
+          print(doc,target=filename)
+        }else{
+          doc <- ph_with_vg(doc, code = plot_fig())
+          print(doc,target=filename)
+        }
+      #graph2ppt(plot_fig(),file=filename)
     }
-    if(input$ftype=="doxs"){
-      graph2doc(plot_fig(),file=filename)
+    if(input$ftype=="docx"){
+       x<-read_docx()
+       if(input$type=="upset"){
+          x<-body_add_vg(x,print(plot_fig()))
+          print(x,target=filename)
+        }else{
+          x <- body_add_vg(x, code = plot_fig())
+          print(x,target=filename)
+        }
+       #x<-body_add_vg(x,code=plot_fig())
+       #print(x,target=filename)
+      # graph2doc(plot_fig(),file=filename)
     }
-    dev.off()
+    #dev.off()
     }
 )
 output$dyna<-renderUI({
