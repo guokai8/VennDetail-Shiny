@@ -279,7 +279,7 @@ plot_fig<-function(){
     }else{
       logg=FALSE
     }
-    plot(res,type=input$type,piecolor=col1,any=input$any,revcolor=input$revcol,percentage=percent,log = logg,base=2,sep="xx_xx_xx_xx")
+    plot(res,type=input$type,piecolor=col1,any=input$any,revcolor=input$revcol,percentage=percent,log = logg,base=2,sep=":")
   }
   if(input$type=="upset"){
     plot(res,type=input$type,mycol=input$col[1:length(res@input)],
